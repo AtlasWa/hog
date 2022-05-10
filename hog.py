@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: Siqi Wang
+# @Date:   2021-01-06 13:56:00
+# @Last Modified by:   Siqi Wang
+# @Last Modified time: 2022-05-10 16:46:47
 """CS 61A Presents The Game of Hog."""
 
 from dice import six_sided, four_sided, make_test_dice
@@ -317,13 +322,13 @@ def run_experiments():
         print('bacon_strategy win rate:', average_win_rate(bacon_strategy))
 
     if False:  # Change to True to test extra_turn_strategy
-        print('extra_turn_strategy win rate:', average_win_rate(extra_turn_strategy))
+        print('extra_turn_strategy win rate:',
+              average_win_rate(extra_turn_strategy))
 
     if False:  # Change to True to test final_strategy
         print('final_strategy win rate:', average_win_rate(final_strategy))
 
     "*** You may add additional experiments as you wish ***"
-
 
 
 def bacon_strategy(score, opponent_score, cutoff=8, num_rolls=6):
