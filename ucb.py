@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: Siqi Wang
+# @Date:   2021-01-06 13:56:00
+# @Last Modified by:   Siqi Wang
+# @Last Modified time: 2022-05-10 17:52:16
 """The UCB module contains functions specific to 61A projects at UC Berkeley."""
 
 from __future__ import print_function
@@ -22,11 +27,14 @@ def main(fn):
     Use this instead of the typical __name__ == "__main__" predicate.
     """
     if inspect.stack()[1][0].f_locals['__name__'] == '__main__':
-        args = sys.argv[1:] # Discard the script name from command line
-        fn(*args) # Call the main function
+        args = sys.argv[1:]  # Discard the script name from command line
+        fn(*args)  # Call the main function
     return fn
 
+
 _PREFIX = ''
+
+
 def trace(fn):
     """A decorator that prints a function's name, its arguments, and its return
     values each time the function is called. For example,
