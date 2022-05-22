@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# @Author: Siqi Wang
+# @Author: Siqi Wang/ Rongying Lu
 # @Date:   2021-01-06 13:56:00
 # @Last Modified by:   Siqi Wang
-# @Last Modified time: 2022-05-09 17:04:31
+# @Last Modified time: 2022-05-19 21:55:34
 """Functions that simulate dice rolls.
 
 A dice function takes no arguments and returns a number from 1 to n
@@ -26,7 +26,7 @@ def make_fair_dice(sides):
     assert type(sides) == int and sides >= 1, 'Illegal value for sides'
 
     def dice():
-        return randint(1, sides)
+        return randint(1, sides)  # randome integers
     return dice
 
 
@@ -34,6 +34,7 @@ four_sided = make_fair_dice(4)
 six_sided = make_fair_dice(6)
 
 
+# The special syntax *args in function definitions in python is used to pass a variable number of arguments to a function.
 def make_test_dice(*outcomes):
     """Return a die that cycles deterministically through OUTCOMES.
 
@@ -53,12 +54,14 @@ def make_test_dice(*outcomes):
     The best way to understand it is by reading the documentation and examples.
     """
     assert len(outcomes) > 0, 'You must supply outcomes to make_test_dice'
-    for o in outcomes:
+    for o in outcomes:  # o iterates thru outcomes
         assert type(o) == int and o >= 1, 'Outcome is not a positive integer'
-    index = len(outcomes) - 1
+
+    index = len(outcomes) - 1  # index = 2
 
     def dice():
-        nonlocal index
-        index = (index + 1) % len(outcomes)
+        nonlocal index  # remove local environment constraint
+        index = (index + 1) % len(outcomes)  # index = 0
         return outcomes[index]
+
     return dice
