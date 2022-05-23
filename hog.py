@@ -2,7 +2,7 @@
 # @Author: Siqi Wang/Rongying Lu
 # @Date:   2021-01-06 13:56:00
 # @Last Modified by:   Siqi Wang
-# @Last Modified time: 2022-05-22 00:21:55
+# @Last Modified time: 2022-05-22 23:33:32
 
 
 """CS 61A Presents The Game of Hog."""
@@ -26,13 +26,14 @@
 # sixsided = make_fair_dice(6) = dice
 
 from cgi import print_directory
+from threading import current_thread
 from dice import six_sided, four_sided, make_test_dice
 from ucb import main, trace, interact
 
 GOAL_SCORE = 100  # The goal of Hog is to score 100 points.
 FIRST_101_DIGITS_OF_PI = 31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 
-######################
+#
 # Phase 1: Simulator #
 ######################
 
@@ -391,6 +392,7 @@ def always_roll(n):
 
 
 def make_averaged(original_function, trials_count=1000):
+    # original_function = roll_dice --- step1, as arg of make_average
     """Return a function that returns the average value of ORIGINAL_FUNCTION
     when called.
 
@@ -402,8 +404,34 @@ def make_averaged(original_function, trials_count=1000):
     >>> averaged_dice()
     3.0
     """
+    # TODO implement <make_averaged> function:
+    # 1. takes original_function as one of the arguments (the function
+    # originally passed into make_averaged)
+    # 2. the returned function differs from the input function in that
+    # it returns the average value of repeatedly calling original_function
+    # on the same arguements
+
+    # TODO write a function accepts an arbitary number of argument, then
+    # call another function using the same args
+
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    def repeat(*orignal_args):
+        # (*orginal_args) = (num_rolls, dice) --- step2, as arg of repeat
+        # repeat the <original function> for <trials_count> times
+        num_repeats = 1
+        outcome = 0
+        sum = 0
+
+        while num_repeats <= trials_count:
+            outcome = original_function(*orignal_args)
+            # original_function(*orignal_args) = roll_dice(num_rolls, dice）
+            # --- step3, used in repeat
+            num_repeats += 1
+            sum += outcome  # summing up all outcomes
+
+        return sum / num_repeats
+
+    return repeat
     # END PROBLEM 8
 
 
@@ -416,9 +444,28 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     >>> max_scoring_num_rolls(dice)
     1
     """
+
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 9
+    # TODO implement the <max_scoring_num_rolls> function
+    # TODO use<make_averaged> and <roll_dice>
+    # Siqi's Hint#1: think of 'roll_dice'
+    # Siqi's Hint#2: think of 'roll_dice' as original_function
+    # Siqi's Hint#3: what args does 'roll_dice' take?
+    # Siqi's Hint#4: how to use higher order functions?
+
+    average, best_num = 0, 0
+    current_high = 0
+    num_rolls = 1
+
+    while num_rolls <= 10:
+        average = make_averaged(roll_dice, trials_count)(num_rolls, dice)
+        # repeat(num_rolls, dice)
+        if average > current_high:
+            current_high, best_num = average, num_rolls
+        num_rolls += 1
+
+    return best_num
+# END PROBLEM 9
 
 
 def winner(strategy0, strategy1):
@@ -442,17 +489,17 @@ def average_win_rate(strategy, baseline=always_roll(6)):
 
 def run_experiments():
     """Run a series of strategy experiments and report results."""
-    if True:  # Change to False when done finding max_scoring_num_rolls
+    if False:  # Change to False when done finding max_scoring_num_rolls
         six_sided_max = max_scoring_num_rolls(six_sided)
         print('Max scoring num rolls for six-sided dice:', six_sided_max)
 
     if False:  # Change to True to test always_roll(8)
-        print('always_roll(8) win rate:', average_win_rate(always_roll(8)))
+        print('always_roll(8) win rate:', average_win_rate(always_roll(4)))
 
     if False:  # Change to True to test bacon_strategy
         print('bacon_strategy win rate:', average_win_rate(bacon_strategy))
 
-    if False:  # Change to True to test extra_turn_strategy
+    if True:  # Change to True to test extra_turn_strategy
         print('extra_turn_strategy win rate:',
               average_win_rate(extra_turn_strategy))
 
@@ -466,9 +513,18 @@ def bacon_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     """This strategy rolls 0 dice if that gives at least CUTOFF points, and
     rolls NUM_ROLLS otherwise.
     """
+
     # BEGIN PROBLEM 10
-    return 6  # Replace this statement
-    # END PROBLEM 10
+    # TODO check free_bacone score > cutoff
+    # TODO if > cutoff, returns 0 whenever rolling 0 would give at least cutoff
+    # points and returns num_rolls otherwise.
+    if free_bacon(opponent_score) >= cutoff:
+        return 0
+    else:
+        return num_rolls
+
+  # Replace this statement
+# END PROBLEM 10
 
 
 def extra_turn_strategy(score, opponent_score, cutoff=8, num_rolls=6):
@@ -477,7 +533,11 @@ def extra_turn_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Replace this statement
+    if extra_turn(score, opponent_score):
+        return 0
+    else:
+        return bacon_strategy(score, opponent_score, cutoff, num_rolls)
+    # Replace this statement
     # END PROBLEM 11
 
 

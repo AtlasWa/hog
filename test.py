@@ -2,7 +2,7 @@
 # @Author: Siqi Wang
 # @Date:   2022-05-10 21:46:37
 # @Last Modified by:   Siqi Wang
-# @Last Modified time: 2022-05-22 00:21:46
+# @Last Modified time: 2022-05-22 21:51:14
 
 
 def announce_highest(who, last_score=0, running_high=0):
